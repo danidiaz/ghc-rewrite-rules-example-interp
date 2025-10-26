@@ -83,7 +83,7 @@ Main.main2 :: String -> Text
 
 # When the rule fires
 
-We detect that we are packing after unpacking, and we remove the detour, instead rendering directly to 'Text':
+We detect that we are packing after unpacking, and we remove the detour, instead rendering directly to `Text`:
 
 ```
 Rule fired

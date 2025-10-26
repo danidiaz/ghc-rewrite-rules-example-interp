@@ -5,13 +5,15 @@ import Data.Text (Text)
 import Data.Text qualified
 
 main :: IO ()
-main = putStrLn $ 
-    interpolateStuff
-    [
-        Left "aa",
-        Right Foo,
-        Left "bb"
-    ]
+main = do
+    i :: Int <- readLn 
+    print @Text $ 
+                    interpolateStuff
+                    [
+                        Left "aa",
+                        Right (Foo i),
+                        Left "bb"
+                    ]
 
 class Interpolate a where
     interpolate :: a -> String
@@ -30,10 +32,16 @@ interpolateStuff =
     ) 
     (fromString "")
 
-data Foo = Foo 
+newtype Foo = Foo Int
 
 instance Interpolate Foo where
-    interpolate _ = "this is foo"
+    interpolate = fooToString
+
+{-# RULES "noIntermediateStringForText" forall foo. Data.Text.pack (fooToString foo) = fooToText foo #-}
 
 fooToText :: Foo -> Text
-fooToText _ = Data.Text.pack "this is foo"
+fooToText (Foo i) = if i > 5 then Data.Text.pack "Foo" else Data.Text.pack "Bar"
+
+fooToString :: Foo -> String
+fooToString (Foo i) = if i > 5 then "FooS" else "BarS"
+{-# NOINLINE fooToString #-}

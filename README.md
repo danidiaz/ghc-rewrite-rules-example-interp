@@ -39,7 +39,7 @@ The idea is that, if we have a type `Foo` with functions `fooToText` and `fooToS
 
 # Without the rewrite rule
 
-The `Foo` value is converted to `String` and then `pack`ed again. A wasteful roundtrip.
+The `Foo` value is converted to `String` and then `pack`ed again. A wasteful detour.
 
 ```
    (text-2.1.2-ecdb:Data.Text.Show.$fShowText_$cshow
@@ -83,7 +83,7 @@ Main.main2 :: String -> Text
 
 # When the rule fires
 
-We detect that we are packing after unpacking, and we remove the roundtrip:
+We detect that we are packing after unpacking, and we remove the detour, instead rendering directly to 'Text':
 
 ```
 Rule fired
@@ -94,7 +94,7 @@ Rule fired
    Cont:   Stop[BoringCtxt] Data.Text.Internal.Text
 ```
 
-Relevant part of the generated core (note the invotations to `fooToText1` and `fooToText2`):
+Relevant part of the generated core (note the invocations to `fooToText1` and `fooToText2`):
 
 ```
     join {
